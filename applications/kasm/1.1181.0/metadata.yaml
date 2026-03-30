@@ -41,12 +41,12 @@ overview: |-
     type: ClusterIP
   ```
   
-  For more configuration options, checkout [Kasm Helm Github](https://github.com/kasmtech/kasm-helm).
+  For more configuration options, checkout [Kasm Helm Github](https://github.com/kasmtech/kasm-helm/tree/release/1.18.1).
 
   ## Resources
 
   - [Kasm Workspaces Documentation](https://docs.kasm.com/)
-  - [Kasm Helm Github](https://github.com/kasmtech/kasm-helm)
+  - [Kasm Helm Github](https://github.com/kasmtech/kasm-helm/tree/release/1.18.1)
 
 icon: PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHZpZXdCb3g9Ijk3LjQgODEuNyAyNzQuMiAzMTYuNiI+PHBhdGggZD0iTTE2NS44IDMyOS44djI4LjlsNDMuNiAyNC45IDEwLjYgNi4zIDE0LjMgOC4zIDEwLjEtMTguMSA0LjMtMTkuNC0xNC40LTEyLjYtNjguNS0zOS43eiIgc3R5bGU9ImZpbGw6IzE4NWY4NSIvPjxwYXRoIGQ9Ik0zNzEuNiAzMTkuMlYxNjAuOGwtMjguNy0xLTYgOS4zTDMyOCAxODZ2MTA4bC05My43IDU0LjF2NTAuMmM0NS45LTI2LjUgOTEuNC01Mi45IDEzNy4zLTc5LjEiIHN0eWxlPSJmaWxsOiMwZDg0YmUiLz48cGF0aCBkPSJNMTQwLjcgMjE0Ljl2LTc5LjNsLTQzLjMgMjUuMnYxNTguNGw0My4zIDI0Ljl2LTc5bDkzLjYgNTQuMXYtNTAuNGwtNTAuMS0yOC45IDUwLjEtMjl2LTUwLjF6IiBzdHlsZT0iZmlsbDojMmEyZDMxIi8+PHBhdGggZD0iTTIzNC4zIDgxLjdjNDUuOCAyNi40IDkxLjQgNTIuNiAxMzcuMiA3OS4xbC0yNS4yIDE0LjZMMzI4IDE4NmwtOTMuNy01NC4xLTY4LjUgMzkuNXYtNTAuMXoiIHN0eWxlPSJmaWxsOiMxYTliZDciLz48L3N2Zz4K
 scope:
