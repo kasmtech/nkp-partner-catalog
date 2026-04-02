@@ -24,24 +24,40 @@ overview: |-
   - **Enhanced Security:** Keep sensitive data within your infrastructure and leverage Kasm's security features.
   - **Simplified Deployment:** Deploy Kasm Workspaces on Kubernetes with a single Helm chart.
 
-  ## Prerequisites
-
-  - A TLS certificate secret in the target namespace
-
   ## Getting Started
 
-  Set the required values before deploying:
+  Set the required values before deploying. **`publicAddr` must be updated to your actual FQDN before enabling:**
   ```yaml
-  publicAddr: "kasm.contoso.com"
+  publicAddr: "kasm.example.com" 
   certificate:
-    secretName: "<some-cert-secret>"
-  ingress:
-    enabled: true
+    secretName: "kasm-tls-secret"
+    certManager:
+      enabled: true
+      addWildCard: true
+      issuerName: "kommander-ca"
+      issuerKind: "ClusterIssuer"
+      issuerGroup: "cert-manager.io"
   proxyService:
     type: ClusterIP
+  ingress:
+    enabled: true
   ```
+  The `certificate.certManager` values above reflect the NKP defaults — update `issuerName`, `issuerKind`, or `issuerGroup` only if using a custom cert-manager setup.
   
   For more configuration options, checkout [Kasm Helm Github](https://github.com/kasmtech/kasm-helm/tree/release/1.18.1).
+
+  ## Post-Deployment
+
+  Once deployed, ensure your DNS is pointed to the cluster ingress and access Kasm at `https://<publicAddr>`.
+
+  To retrieve credentials, run:
+  ```bash
+  NS=$(kubectl get helmrelease -A | grep kasm | awk '{print $1}') && \
+  RELEASE=$(kubectl get helmrelease -A | grep kasm | awk '{print $1"-"$2}') && \
+  kubectl get secret -n $NS -l "owner=helm,name=$RELEASE,status=deployed" -o jsonpath='{.items[0].data.release}' | base64 -d | base64 -d | gunzip | python3 -c "import sys,json; print(json.load(sys.stdin)['info']['notes'])"
+  ```
+
+  A Kasm Agent is required to start a Kasm session. The agent must be installed separately on a dedicated VM. Refer to the [Kasm Agent Installation Guide](https://docs.kasm.com/docs/1.18.1/install/multi_server_install#install-agent-server-roles) for setup instructions.
 
   ## Resources
 
