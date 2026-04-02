@@ -16,9 +16,11 @@ data:
       secretName: "kasm-tls-secret"
 
       # certManager -- Automated certificate management via cert-manager.
-      # The values below are NKP defaults. Adjust if using a custom cert-manager setup.
+      # Set enabled to true to use cert-manager to automatically provision the TLS certificate.
+      # If disabled, the secret specified in secretName must be created manually.
+      # The remaining values are NKP defaults. Adjust if using a custom cert-manager setup.
       certManager:
-        enabled: true
+        enabled: false
         # addWildCard -- Adds a wildcard SAN (e.g., *.kasm.example.com).
         addWildCard: true
         # issuerName/issuerKind/issuerGroup -- NKP default issuer settings.
