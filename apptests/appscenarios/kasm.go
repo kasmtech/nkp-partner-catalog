@@ -43,10 +43,8 @@ func (k *Kasm) install(ctx context.Context, env *environment.Env, appPath string
 	// apply the kustomization for the helmrelease
 	helmreleasePath := filepath.Join(appPath, "helmrelease")
 	err := env.ApplyKustomizations(ctx, helmreleasePath, map[string]string{
-		"releaseNamespace":      constant.DEFAULT_NAMESPACE,
-		"releaseName":           k.Name(),
-		"publicAddr":            "kasm.example.com",
-		"certificateSecretName": "kasm-tls-secret",
+		"releaseNamespace": constant.DEFAULT_NAMESPACE,
+		"releaseName":      k.Name(),
 	})
 	if err != nil {
 		return err

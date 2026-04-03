@@ -1,6 +1,7 @@
 package suites
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
@@ -24,6 +25,28 @@ import (
 	"github.com/nutanix-cloud-native/nkp-partner-catalog/apptests/appscenarios"
 	"github.com/nutanix-cloud-native/nkp-partner-catalog/apptests/appscenarios/constant"
 )
+
+// setKasmValues patches the Kasm default ConfigMap with the values required for
+// the test to work. publicAddr and certificate.secretName are intentionally
+// left empty in the shipped defaults for users to configure, so we set them here.
+func setKasmValues(ctx context.Context, releaseName, version, namespace string) error {
+	cm := &unstructured.Unstructured{
+		Object: map[string]interface{}{
+			"apiVersion": "v1",
+			"kind":       "ConfigMap",
+		},
+	}
+	cmName := releaseName + "-" + version + "-config-defaults"
+	if err := k8sClient.Get(ctx, ctrlClient.ObjectKey{Name: cmName, Namespace: namespace}, cm); err != nil {
+		return err
+	}
+	valuesYAML, _, _ := unstructured.NestedString(cm.Object, "data", "values.yaml")
+	valuesYAML += "\npublicAddr: \"kasm.example.com\"\ncertificate:\n  secretName: \"kasm-tls-secret\"\n"
+	if err := unstructured.SetNestedField(cm.Object, valuesYAML, "data", "values.yaml"); err != nil {
+		return err
+	}
+	return k8sClient.Update(ctx, cm)
+}
 
 func createSelfSignedTLSSecret(name, namespace string) *unstructured.Unstructured {
 	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
@@ -95,6 +118,9 @@ var _ = Describe("kasm Tests", Ordered, Label("kasm"), func() {
 			err = k.Install(ctx, env)
 			Expect(err).ToNot(HaveOccurred())
 
+			err = setKasmValues(ctx, k.Name(), *appVersion, constant.DEFAULT_NAMESPACE)
+			Expect(err).ToNot(HaveOccurred())
+
 			hr = &fluxhelmv2.HelmRelease{
 				TypeMeta: metav1.TypeMeta{
 					Kind:       fluxhelmv2.HelmReleaseKind,
@@ -139,6 +165,9 @@ var _ = Describe("kasm Tests", Ordered, Label("kasm"), func() {
 
 			k = appscenarios.NewKasmScenario("").(*appscenarios.Kasm)
 			err = k.InstallPreviousVersion(ctx, env)
+			Expect(err).ToNot(HaveOccurred())
+
+			err = setKasmValues(ctx, k.Name(), *appVersion, constant.DEFAULT_NAMESPACE)
 			Expect(err).ToNot(HaveOccurred())
 
 			hr = &fluxhelmv2.HelmRelease{
